@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memento Mori Tracker</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+        }
+        .card {
+            background: #1e1e1e;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        h2 { font-size: 1.2rem; color: #888; margin-bottom: 0.5rem; text-transform: uppercase; }
+        .timer { font-size: 2.5rem; font-weight: bold; font-variant-numeric: tabular-nums; }
+        .progress-container {
+            background: #333;
+            border-radius: 10px;
+            height: 20px;
+            width: 100%;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background: #4caf50;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease-out;
+        }
+        .life-bar { background: #f44336; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2>Year Progress</h2>
+        <div id="year-timer" class="timer">0%</div>
+        <div class="progress-container">
+            <div id="year-bar" class="progress-bar"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Life Remaining (Est. 80 years)</h2>
+        <div id="life-timer" class="timer">0%</div>
+        <div class="progress-container">
+            <div id="life-bar" class="progress-bar life-bar"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Personalize your data here
+    const BIRTH_DATE = new Date('1995-05-10'); // Change your birth date
+    const EXPECTED_AGE = 80;
+
+    function updateTrackers() {
+        const now = new Date();
+
+        // 1. Year Progress Calculation
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const endOfYear = new Date(now.getFullYear() + 1, 0, 1);
+        const yearPercent = ((now - startOfYear) / (endOfYear - startOfYear)) * 100;
+        
+        document.getElementById('year-timer').innerText = yearPercent.toFixed(7) + '%';
+        document.getElementById('year-bar').style.width = yearPercent + '%';
+
+        // 2. Life Remaining Calculation
+        const deathDate = new Date(BIRTH_DATE);
+        deathDate.setFullYear(BIRTH_DATE.getFullYear() + EXPECTED_AGE);
+        
+        const totalLifeMs = deathDate - BIRTH_DATE;
+        const livedMs = now - BIRTH_DATE;
+        const remainingPercent = Math.max(0, 100 - (livedMs / totalLifeMs * 100));
+
+        document.getElementById('life-timer').innerText = remainingPercent.toFixed(8) + '%';
+        document.getElementById('life-bar').style.width = remainingPercent + '%';
+    }
+
+    // Update every 100ms for a "live" ticking effect
+    setInterval(updateTrackers, 100);
+    updateTrackers();
+</script>
+
+</body>
+</html>
